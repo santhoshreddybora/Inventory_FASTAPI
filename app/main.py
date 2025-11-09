@@ -4,7 +4,8 @@ from contextlib import asynccontextmanager
 from app import models
 from app.routers import products,orders,webhook
 from sqlalchemy import inspect
-
+import uvicorn
+import os
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Setup code: Create all tables
@@ -27,3 +28,7 @@ app.include_router(webhook.router)
 @app.get("/")
 async def read_root():
     return {"message": "Welcome to the FastAPI app!"}
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # Render provides PORT dynamically
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
