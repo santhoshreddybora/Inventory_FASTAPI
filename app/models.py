@@ -1,4 +1,4 @@
-from sqlalchemy import Column,Integer,String,Float,Index,ForeignKey,DateTime,CheckConstraint
+from sqlalchemy import Column,Integer,String,Float,Index,ForeignKey,DateTime,CheckConstraint,Text
 from app.databases import Base
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
@@ -37,3 +37,13 @@ class Order(Base):
         allowed_statuses = ["PENDING", "PAID", "SHIPPED", "CANCELED"]
         if status not in allowed_statuses:
             raise ValueError(f"Status must be one of the following: {allowed_statuses}")
+
+class WebhookEvent(Base):
+    __tablename__="Webhook_events"
+
+    id=Column(Integer,primary_key=True)
+    event_id=Column(String,nullable=False,unique=True)
+    event_type=Column(String,nullable=False)
+    raw_payload=Column(Text)
+    received_at=Column(DateTime(timezone=True),server_default=func.now())
+
